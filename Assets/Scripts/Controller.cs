@@ -77,14 +77,8 @@ namespace HybridGame
 
         private void ProcessMovement()
         {
-            float xInput = Input.GetAxis("Horizontal");
-            this.isMoving = !MathUtils.isZeroish(xInput);
-            if (this.isMoving)
-            {
-                this.isFacingLeft = xInput < 0;
-                float multiplier = this.movementSpeedMultiplier;
-                this.movement.MoveX(movementSpeedMultiplier * xInput); 
-            }
+            float xInput = Input.GetAxisRaw("Horizontal");
+            this.movement.MoveX(movementSpeedMultiplier * xInput); 
             jumper.Jump(this.isGrounded);
         }
     }

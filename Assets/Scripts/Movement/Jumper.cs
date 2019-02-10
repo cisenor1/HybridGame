@@ -4,7 +4,6 @@ using System.Collections;
 namespace HybridGame
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(Jumper))]
     public class Jumper : MonoBehaviour
     {
         public bool isJumping = false;
