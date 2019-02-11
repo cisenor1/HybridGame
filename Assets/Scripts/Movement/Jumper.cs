@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Controls;
 
 namespace HybridGame
 {
@@ -30,7 +31,7 @@ namespace HybridGame
             if (this.rb.velocity.y < 0){
                 // We're falling
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (jumpFallGravMultiplier - 1) * Time.deltaTime;
-            }else if (rb.velocity.y > 0 && !Input.GetButton("Jump")){
+            }else if (rb.velocity.y > 0 && !ControlList.Instance().Player1().JumpButton()){
                 // We're jumping
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpGravMultiplier - 1) * Time.deltaTime;
             }
@@ -38,7 +39,8 @@ namespace HybridGame
 
         public bool Jump(bool isGrounded)
         {
-            if (isGrounded && Input.GetButtonDown("Jump")){
+            if (isGrounded && ControlList.Instance().Player1().JumpButtonPressed())
+            {
                 rb.velocity = Vector2.up * jumpForce;
             }
             return this.isJumping;

@@ -1,12 +1,11 @@
-﻿using System.Collections;
+﻿using Controls;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace HybridGame
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Animator))]
-    [RequireComponent(typeof(Movement))]
-    [RequireComponent(typeof(Jumper))]
     public class Controller : MonoBehaviour
     {
 
@@ -16,6 +15,11 @@ namespace HybridGame
         public float movementSpeedMultiplier = 1.0f;
         [Range(0.5f, 1)]
         public float jumpingXSpeedMultiplier = 0.8f;
+        [Range(0.0f, 3.0f)]
+        public float jumpFallGravMultiplier = 2.5f;
+        [Range(0, 3)]
+        public float lowJumpGravMultiplier = 2f;
+        public float jumpForce = 10;
 
         private Animator animator;
         private bool isGrounded = true;
@@ -25,16 +29,17 @@ namespace HybridGame
         private Movement movement;
         private Rigidbody2D rb;
         private Jumper jumper;
+        private IControl _control;
 
 
         // Use this for initialization
         void Start()
         {
             this.animator = gameObject.GetComponentInChildren<Animator>();
-            this.movement = gameObject.GetComponent<Movement>();
             this.rb = gameObject.GetComponent<Rigidbody2D>();
-            this.jumper = gameObject.GetComponent<Jumper>();
             CheckFlags();
+            _control = new SNES8Bitdo();
+            ControlList.Instance().AddControl(0, _control);
         }
 
         // Update is called once per frame
@@ -42,6 +47,10 @@ namespace HybridGame
         {
             CheckFlags();
             SetExternals();
+        }
+
+        private void OnGUI()
+        {
         }
 
         private void FixedUpdate()
@@ -52,7 +61,8 @@ namespace HybridGame
         private void CheckFlags()
         {
             this.isGrounded = CheckIsGrounded();
-            if (this.isGrounded){
+            if (this.isGrounded)
+            {
                 this.isJumping = false;
             }
         }
@@ -60,8 +70,8 @@ namespace HybridGame
         private bool CheckIsGrounded()
         {
             return Physics2D.OverlapArea(
-                this.groundOverlapTopLeft.position, 
-                this.groundOverlapBottomRight.position, 
+                this.groundOverlapTopLeft.position,
+                this.groundOverlapBottomRight.position,
                 this.groundLayers
             );
         }
@@ -70,16 +80,48 @@ namespace HybridGame
         {
             this.animator.SetBool("is_grounded", this.isGrounded);
             this.animator.SetBool("is_jumping", this.isJumping);
-            this.animator.SetBool("is_moving", this.isMoving);
+            this.animator.SetBool("is_moving", rb.velocity.x != 0);
             // Flip the sprite if moving left.
-            transform.localScale = new Vector2(this.isFacingLeft ? -1 : 1,1);
+            if (rb.velocity.x > 0)
+            {
+                transform.localScale = new Vector2(1, 1);
+            }
+            else if (rb.velocity.x < 0)
+            {
+                transform.localScale = new Vector2(-1, 1);
+            }
+        }
+
+        void LateUpdate()
+        {
+            ApplyGravity();
+        }
+
+        private void ApplyGravity()
+        {
+            if (this.rb.velocity.y < 0)
+            {
+                // We're falling
+                rb.velocity += Vector2.up * Physics2D.gravity.y * (jumpFallGravMultiplier - 1) * Time.deltaTime;
+            }
+            else if (rb.velocity.y > 0 && !_control.JumpButton())
+            {
+                // We're jumping
+                rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpGravMultiplier - 1) * Time.deltaTime;
+            }
         }
 
         private void ProcessMovement()
         {
-            float xInput = Input.GetAxisRaw("Horizontal");
-            this.movement.MoveX(movementSpeedMultiplier * xInput); 
-            jumper.Jump(this.isGrounded);
+            var xInput = _control.XAxis();
+            float xSpeed = xInput * movementSpeedMultiplier * Time.deltaTime;
+            float ySpeed = this.rb.velocity.y;
+            rb.AddForce(new Vector2(xSpeed, ySpeed));
+            if (isGrounded && ControlList.Instance().Player1().JumpButtonPressed())
+            {
+                rb.velocity += Vector2.up * jumpForce;
+            }
+
         }
     }
 }

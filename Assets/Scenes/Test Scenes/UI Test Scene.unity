@@ -441,7 +441,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -13.04, y: -68}
+  m_AnchoredPosition: {x: -13.040039, y: -68}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &739943755
@@ -1259,11 +1259,11 @@ Prefab:
         type: 2}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6200000, guid: 6ef57df6be09e44f6804c5d38dbb2c57, type: 2}
     - target: {fileID: 50710653183253318, guid: 4b273590344be4c9c85f2b3f84429b69,
         type: 2}
       propertyPath: m_LinearDrag
-      value: 0.1
+      value: 1.21
       objectReference: {fileID: 0}
     - target: {fileID: 114272640730273766, guid: 4b273590344be4c9c85f2b3f84429b69,
         type: 2}
@@ -1275,7 +1275,29 @@ Prefab:
       propertyPath: jumpFallGravMultiplier
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 114277417911167382, guid: 4b273590344be4c9c85f2b3f84429b69,
+        type: 2}
+      propertyPath: movementSpeedMultiplier
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 61873167315391840, guid: 4b273590344be4c9c85f2b3f84429b69,
+        type: 2}
+      propertyPath: m_EdgeRadius
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 61873167315391840, guid: 4b273590344be4c9c85f2b3f84429b69,
+        type: 2}
+      propertyPath: m_Offset.y
+      value: 0.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 114277417911167382, guid: 4b273590344be4c9c85f2b3f84429b69,
+        type: 2}
+      propertyPath: jumpForce
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114272640730273766, guid: 4b273590344be4c9c85f2b3f84429b69, type: 2}
+    - {fileID: 114456502891170002, guid: 4b273590344be4c9c85f2b3f84429b69, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 4b273590344be4c9c85f2b3f84429b69, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &1504252564
